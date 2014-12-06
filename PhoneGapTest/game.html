@@ -140,7 +140,12 @@
                     var winLetter = isFinalWin();
 
                     if (winLetter !== null) {
-                        navigator.vibrate(3000);
+                        try {
+                            navigator.vibrate(3000);
+                        } catch (e) {
+                            alert(e.message);
+                        }
+                        
                         alert("pobedil je " + winLetter);
                         
                         var endTime = new Date().getTime() - startTime;
