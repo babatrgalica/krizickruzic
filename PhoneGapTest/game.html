@@ -18,6 +18,8 @@
         <script type="text/javascript" src="jquery-1.11.1.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function () {
+                var startTime = new Date().getTime();
+
                 var matrix = [
                     [null, null, null],
                     [null, null, null],
@@ -138,7 +140,13 @@
                     var winLetter = isFinalWin();
 
                     if (winLetter !== null) {
+                        navigator.vibrate(3000);
                         alert("pobedil je " + winLetter);
+                        
+                        var endTime = new Date().getTime() - startTime;
+
+                        window.location.href = "highscores.html?score=" + endTime;
+
                         return;
                     }
 
@@ -173,5 +181,7 @@
                 <td data-x="2" data-y="2"></td>
             </tr>
 		</table>
+
+        <input type="button" value="Nova igra" onclick="window.location.href = window.location.href;"
 	</body>
 </html>

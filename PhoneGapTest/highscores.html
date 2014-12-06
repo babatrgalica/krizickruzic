@@ -1,0 +1,113 @@
+<html>
+<head>
+    <!--<script type="text/javascript" src="cordova.js"></script>-->
+    <script type="text/javascript" src="angular.js"></script>
+
+    <script type="text/javascript">
+        function getParameterValue(parameterName) {
+            parameterName = parameterName.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+            var regexS = "[\\?&]" + parameterName + "=([^&#]*)";
+            var regex = new RegExp(regexS);
+            var results = regex.exec(window.location.href);
+            if (results == null)
+                return "";
+            else
+                return results[1];
+        };
+
+        function safeApply($scope, fn) {
+            var phase = $scope.$root.$$phase;
+
+            if (phase == '$apply' || phase == '$digest') {
+                if (fn && (typeof (fn) === 'function')) {
+                    fn();
+                }
+            }
+            else {
+                $scope.$apply(fn);
+            }
+        };
+
+        function Controler($scope) {
+            _me = {};
+
+            $scope.scores = [];
+
+            _me.highScores = function (jsonString) {
+                var json = null;
+
+                if (jsonString != null && jsonString != "") {
+                    json = JSON.parse(jsonString);
+                }
+
+                var scores = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+                if (json != null &&
+                    json.length > 0) {
+
+                    for (i = 0; i < json.length && i < 10; i++) {
+                        scores[i] = json[i];
+                    }
+                }
+
+                return scores;
+            };
+
+            _me.setScores = function () {
+                var fn = function () {
+                    var score = getParameterValue("score");
+                    var scoreMs = NaN;
+                    if (score != null &&
+                        score != "") {
+
+                        scoreMs = parseInt(score);
+                    }
+
+                    var storageKey = "highscores";
+                    var jsonString = localStorage.getItem(storageKey);
+
+                    $scope.scores = _me.highScores(jsonString);
+
+                    if (!isNaN(scoreMs)) {
+                        for (i = 0; i < $scope.scores.length; i++) {
+                            if ($scope.scores[i] == 0 || scoreMs < $scope.scores[i]) {
+                                $scope.scores.splice(i, 0, scoreMs);
+                                break;
+                            }
+                        }
+                    }
+
+                    for (i = $scope.scores.length; i > 9 ; i--) {
+                        $scope.scores.splice(i, 1);
+                    }
+
+                    localStorage.setItem(storageKey, JSON.stringify($scope.scores));
+                };
+
+                safeApply($scope, fn);
+            };
+
+            _me.setScores();
+
+            return _me;
+        }
+
+    </script>
+</head>
+<body>
+
+    <div id="ngApp" ng-app>
+        <div id="divNgController" ng-controller="Controler">
+            <table>
+                <tbody ng-repeat="item in scores track by $index">
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ item }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
