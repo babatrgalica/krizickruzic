@@ -1,0 +1,177 @@
+<html>
+	<head>
+	    <style type="text/css">
+	        td {
+                width: 60px;
+                height: 60px;
+	        }
+
+            table {
+                border-collapse: collapse;
+            }
+
+            table, th, td {
+                border: 1px solid black;
+            }
+	    </style>
+
+        <script type="text/javascript" src="jquery-1.11.1.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var matrix = [
+                    [null, null, null],
+                    [null, null, null],
+                    [null, null, null]
+                ];
+
+                function enterY() {
+                    for (y = 0; y < 3; y++) {
+                        for (x = 0; x < 3; x++) {
+                            if (matrix[y][x] === null) {
+                                matrix[y][x] = "0";
+                                $("td[data-y=" + y + "][data-x=" + x + "]").html("O");
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                function isHorizontalWin() {
+                    for (i = 0; i < 3; i++) {
+                        var line = matrix[i];
+
+                        var winLetter = isWin(line);
+
+                        if (winLetter !== null) {
+                            return winLetter;
+                        }
+                    }
+
+                    return null;
+                }
+
+                function isVerticalWin() {
+                    for (i = 0; i < 3; i++) {
+                        var line = [matrix[0][i], matrix[1][i], matrix[2][i]];
+
+                        var winLetter = isWin(line);
+
+                        if (winLetter !== null) {
+                            return winLetter;
+                        }
+                    }
+
+                    return null;
+                }
+
+                function isDiagonalWin() {
+                    var line = [matrix[0][0], matrix[1][1], matrix[2][2]];
+
+                    var winLetter = isWin(line);
+
+                    if (winLetter !== null) {
+                        return winLetter;
+                    }
+
+                    line = [matrix[2][0], matrix[1][1], matrix[0][2]];
+
+                    winLetter = isWin(line);
+
+                    if (winLetter !== null) {
+                        return winLetter;
+                    }
+
+                    return null;
+                }
+
+                function isWin(line) {
+                    if (line[0] !== null) {
+                        var winLetter = line[0];
+                        var isWin = true;
+
+                        for (j = 1; j < 3; j++) {
+                            if (line[j] !== winLetter) {
+                                isWin = false;
+                                break;
+                            }
+                        }
+
+                        if (isWin) {
+                            return winLetter;
+                        }
+                    }
+
+                    return null;
+                }
+
+                function isFinalWin() {
+                    var winLetter = isHorizontalWin();
+
+                    if (winLetter !== null) {
+                        return winLetter;
+                    }
+
+                    winLetter = isVerticalWin();
+
+                    if (winLetter !== null) {
+                        return winLetter;
+                    }
+
+                    winLetter = isDiagonalWin();
+
+                    if (winLetter !== null) {
+                        return winLetter;
+                    }
+
+                    return null;
+                }
+
+                $("td").on("click", function () {
+                    $this = $(this);
+                    $this.html("X");
+
+                    var x = parseInt($this.data("x"));
+                    var y = parseInt($this.data("y"));
+
+                    matrix[y][x] = "X";
+
+                    var winLetter = isFinalWin();
+
+                    if (winLetter !== null) {
+                        alert("pobedil je " + winLetter);
+                        return;
+                    }
+
+                    enterY();
+
+                    winLetter = isFinalWin();
+
+                    if (winLetter !== null) {
+                        alert("pobedil je " + winLetter);
+                    }
+                });
+
+
+            });
+        </script>
+	</head>
+	<body>
+		<table>
+            <tr>
+                <td data-x="0" data-y='0'></td>
+                <td data-x="1" data-y="0"></td>
+                <td data-x="2" data-y="0"></td>
+            </tr>
+            <tr>
+                <td data-x="0" data-y="1"></td>
+                <td data-x="1" data-y="1"></td>
+                <td data-x="2" data-y="1"></td>
+            </tr>
+            <tr>
+                <td data-x="0" data-y="2"></td>
+                <td data-x="1" data-y="2"></td>
+                <td data-x="2" data-y="2"></td>
+            </tr>
+		</table>
+	</body>
+</html>
