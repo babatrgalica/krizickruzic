@@ -26,7 +26,25 @@
                     [null, null, null]
                 ];
 
-                function enterY() {
+				function play() {
+					var storageKey = "lastPlayer";
+					var lastPlayer = localStorage.getItem(storageKey);
+					var nextPlayer;
+					
+					if (lastPlayer === "X") {
+						nextPlayer = "O";
+					} else {
+						nextPlayer = "X";
+					}
+					
+					localStorage.setItem(storageKey, nextPlayer);
+					
+					if (nextPlayer === "O") {
+						enterO();
+					}
+				}
+				
+                function enterO() {
                     for (y = 0; y < 3; y++) {
                         for (x = 0; x < 3; x++) {
                             if (matrix[y][x] === null) {
@@ -141,7 +159,7 @@
 
                     if (winLetter !== null) {
                         try {
-                            navigator.notification.vibrate(2000);
+                            navigator.vibrate(2000);
                         } catch (e) {
                             alert(e.message);
                         }
@@ -155,7 +173,7 @@
                         return;
                     }
 
-                    enterY();
+                    enterO();
 
                     winLetter = isFinalWin();
 
@@ -163,8 +181,8 @@
                         alert("pobedil je " + winLetter);
                     }
                 });
-
-
+				
+				play();
             });
         </script>
 	</head>

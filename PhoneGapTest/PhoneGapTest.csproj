@@ -32,8 +32,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="angular.js" />
     <Content Include="bla.js" />
+    <Content Include="config.xml" />
+    <Content Include="cordova.js" />
     <Content Include="game.html" />
+    <Content Include="highscores.html" />
     <Content Include="index.html" />
     <Content Include="jquery-1.11.1.min.js" />
   </ItemGroup>
